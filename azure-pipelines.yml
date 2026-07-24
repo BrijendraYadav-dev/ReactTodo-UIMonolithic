@@ -1,7 +1,7 @@
 ---
 trigger:
 - main
-pool: Todo_Microservice_Agent_Pool
+pool: AWSAgnet-Pool
 variables:
   NODE_PATH: /Users/brijendra/.nvm/versions/node/v16.20.2/bin
 
