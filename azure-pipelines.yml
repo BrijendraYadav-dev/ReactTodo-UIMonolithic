@@ -31,6 +31,7 @@ jobs:
    displayName: Node_Install
    dependsOn: lint
    steps:
+    - checkout: self
     # TEST NODE
     - task: NodeTool@0
       inputs:
@@ -47,7 +48,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          cd "$(System.DefaultWorkingDirectory)/src"
+          cd "$(System.DefaultWorkingDirectory)"
           npm install
 
     # NPM BUILD
