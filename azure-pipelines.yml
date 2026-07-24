@@ -1,73 +1,66 @@
 ---
 trigger:
-- main
+ - main
 pool: AWSAgnet-Pool
 variables:
   NODE_PATH: /Users/brijendra/.nvm/versions/node/v16.20.2/bin
 
 jobs:
 
-- job: lint
-  displayName: Lint
-  steps:
-  - checkout: self
-
-  - task: PowerShell@2
-    displayName: Lint JavaScript (Biome)
-    continueOnError: true
-    inputs:
+ - job: lint
+   displayName: Lint
+   steps:
+   - checkout: self
+   - task: PowerShell@2
+     displayName: Lint JavaScript (Biome)
+     continueOnError: true
+     inputs:
       targetType: inline
       pwsh: true
       script: |
         Invoke-WebRequest -Uri "https://github.com/biomejs/biome/releases/download/@biomejs/biome@2.3.8/biome-linux-x64" -OutFile "$(Agent.ToolsDirectory)/biome-linux-x64"
-
         chmod +x "$(Agent.ToolsDirectory)/biome-linux-x64"
-
         Write-Host "Working Directory: $(System.DefaultWorkingDirectory)"
-
         & "$(Agent.ToolsDirectory)/biome-linux-x64" lint "$(System.DefaultWorkingDirectory)/src"
-  - task: PowerShell@2
-    displayName: "YAML Linting (yamllint)"
-    inputs:
-      targetType: 'inline'
-      script: |
-        yamllint $(System.DefaultWorkingDirectory)
+   - task: PowerShell@2
+     displayName: "YAML Linting (yamllint)"
+     inputs:
+       targetType: 'inline'
+       script: |
+         yamllint $(System.DefaultWorkingDirectory)
+ - job: NodeInstall
+   displayName: Node_Install
+   dependsOn: lint
+   steps:
+    # TEST NODE
+    - pwsh: |
+        node -v
+        npm -v
+      env:
+        PATH: "$(PATH):$(NODE_PATH)"
+      displayName: "Check Node & NPM"
+  # NPM INSTALL
+    - task: PowerShell@2
+      env:
+        PATH: "$(PATH):$(NODE_PATH)"
+      inputs:
+        targetType: 'inline'
+        script: |
+          npm install
 
-- job: NodeInstall
-  displayName: Node_Install
-  dependsOn: lint
-  steps:
+    # NPM BUILD
+    - task: PowerShell@2
+      env:
+        PATH: "$(PATH):$(NODE_PATH)"
+      inputs:
+        targetType: 'inline'
+        script: |
+          npm run build
 
-  # TEST NODE
-  - pwsh: |
-      node -v
-      npm -v
-    env:
-      PATH: "$(PATH):$(NODE_PATH)"
-    displayName: "Check Node & NPM"
-
- # NPM INSTALL
-  - task: PowerShell@2
-    env:
-      PATH: "$(PATH):$(NODE_PATH)"
-    inputs:
-      targetType: 'inline'
-      script: |
-        npm install
-
-  # NPM BUILD
-  - task: PowerShell@2
-    env:
-      PATH: "$(PATH):$(NODE_PATH)"
-    inputs:
-      targetType: 'inline'
-      script: |
-        npm run build
-
-  # PUBLISH ARTIFACT
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '$(System.DefaultWorkingDirectory)'
-      artifact: 'build'
-      publishLocation: 'pipeline'
-      
+    # PUBLISH ARTIFACT
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)'
+        artifact: 'build'
+        publishLocation: 'pipeline'
+        
