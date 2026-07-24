@@ -48,7 +48,6 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          cd "$(System.DefaultWorkingDirectory)"
           npm install
 
     # NPM BUILD
@@ -56,7 +55,6 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          cd "$(System.DefaultWorkingDirectory)/src"
           npm run build
 
     # PUBLISH ARTIFACT
