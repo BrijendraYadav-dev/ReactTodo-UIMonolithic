@@ -31,7 +31,6 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        pipx install yamllint
         yamllint $(System.DefaultWorkingDirectory)
 
 - job: NodeInstall
