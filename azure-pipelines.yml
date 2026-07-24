@@ -44,20 +44,18 @@ jobs:
       displayName: "Check Node & NPM"
   # NPM INSTALL
     - task: PowerShell@2
-      env:
-        PATH: "$(PATH):$(NODE_PATH)"
       inputs:
         targetType: 'inline'
         script: |
+          cd "$(System.DefaultWorkingDirectory)/src"
           npm install
 
     # NPM BUILD
     - task: PowerShell@2
-      env:
-        PATH: "$(PATH):$(NODE_PATH)"
       inputs:
         targetType: 'inline'
         script: |
+          cd "$(System.DefaultWorkingDirectory)/src"
           npm run build
 
     # PUBLISH ARTIFACT
