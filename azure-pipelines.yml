@@ -10,14 +10,21 @@ jobs:
 - job: lint
   displayName: Lint
   steps:
+  - checkout: self
+
   - task: PowerShell@2
-    continueOnError: true
-    displayName: Lint JavaScript(Biome)
+    displayName: Lint JavaScript (Biome)
     inputs:
-      targetType: 'inline'
+      targetType: inline
+      pwsh: true
       script: |
-        Invoke-WebRequest -Uri "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%402.3.8/biome-linux-x64" -OutFile "$(Agent.ToolsDirectory)/biome-linux-x64"
-        $(Agent.ToolsDirectory)/biome-linux-x64 lint $(System.DefaultWorkingDirectory)/src/
+        Invoke-WebRequest -Uri "https://github.com/biomejs/biome/releases/download/@biomejs/biome@2.3.8/biome-linux-x64" -OutFile "$(Agent.ToolsDirectory)/biome-linux-x64"
+
+        chmod +x "$(Agent.ToolsDirectory)/biome-linux-x64"
+
+        Write-Host "Working Directory: $(System.DefaultWorkingDirectory)"
+
+        & "$(Agent.ToolsDirectory)/biome-linux-x64" lint "$(System.DefaultWorkingDirectory)/src"
   - task: PowerShell@2
     displayName: "YAML Linting (yamllint)"
     inputs:
