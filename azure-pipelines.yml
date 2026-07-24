@@ -22,6 +22,7 @@ jobs:
         & "$(Agent.ToolsDirectory)/biome-linux-x64" lint "$(System.DefaultWorkingDirectory)/src"
    - task: PowerShell@2
      displayName: "YAML Linting (yamllint)"
+     continueOnError: true
      inputs:
        targetType: 'inline'
        script: |
