@@ -4,9 +4,7 @@ trigger:
 pool: AWSAgnet-Pool
 variables:
   NODE_PATH: /Users/brijendra/.nvm/versions/node/v16.20.2/bin
-
 jobs:
-
  - job: lint
    displayName: Lint
    steps:
