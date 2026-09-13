@@ -1,7 +1,7 @@
 ---
 trigger:
  - main
-pool: AWSAgnet-Pool
+pool: Docker-VM_pool
 variables:
   NODE_PATH: /home/ubuntu/agent/.nvm/versions/node/v16.20.2/bin
 jobs:
