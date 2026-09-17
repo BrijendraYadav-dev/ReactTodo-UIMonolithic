@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on:
-      group: Action_Todo
       labels: self-hosted
 
     strategy:
